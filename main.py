@@ -31,7 +31,6 @@ class Individual:
         return f"Position: {self.position}, Infected: {self.is_infected}, Alive: {self.alive}, infected time {self.infected_time}"
 
 
-
 class Simulation:
     def __init__(self, grid_size, num_individuals, num_iteretions, movement_speed, initial_infected_index, infection_radius, infection_probability, probability_of_dying):
         self.grid_size = grid_size
