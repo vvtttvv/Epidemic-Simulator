@@ -1,7 +1,7 @@
 import styles from "./Body.module.css"
 import Parameters from "./Parameters/Parameters";
 import Map from "./Map/map";
-function Body(){
+function Body(  ){
     return(
         <div className={styles.body}>
             <Parameters/>

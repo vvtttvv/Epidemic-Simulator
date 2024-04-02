@@ -1,6 +1,9 @@
 import styles from "./Parameters.module.css"
 import Slider from "./Slider/Slider"
 function Parameters(){
+    function submitHandler(e){
+        alert("subitted the form")
+    }
     return(
         <div className={styles.wrapper}>
             <div className={styles.graph}>
@@ -9,17 +12,27 @@ function Parameters(){
             </div>
             <div className={styles.settings}>
                 <div className={styles.buttons}>
-                    <button>
+                    <select>
                         Presets(change tag)
-                    </button>
-                    <button>Start</button>
+                        <option value="covid">covid</option>
+                        <option value="HIV">HIV</option>
+                        <option value="covid">covid</option>
+                        <option value="HIV">HIV</option>
+                        <option value="covid">covid</option>
+                        <option value="HIV">HIV</option>
+                        <option value="covid">covid</option>
+                        <option value="HIV">HIV</option>
+                        <option value="covid">covid</option>
+                        <option value="HIV">HIV</option>
+                    </select>
+                    <button onClick={submitHandler}>Start</button>
                 </div>
                 <div className={styles.sliders}>
-                    <Slider/>
-                    <Slider/>
-                    <Slider/>
-                    <Slider/>
-                    <Slider/>
+                    <Slider name="Infectioness"/>
+                    <Slider name="Social distancing"/>
+                    <Slider name="a"/>
+                    <Slider name="b"/>
+                    <Slider name="c"/>
                 </div>
             </div>
         </div>

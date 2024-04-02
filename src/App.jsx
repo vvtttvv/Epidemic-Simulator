@@ -41,7 +41,7 @@ function App() {
       <div className="body">
         <SplashScreen duration={2800} />
         <Header/>
-        <Body/>
+        <Body />
         <Footer/>
       </div>
     </>
