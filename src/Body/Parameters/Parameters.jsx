@@ -1,9 +1,13 @@
+
 import styles from "./Parameters.module.css"
 import Slider from "./Slider/Slider"
-function Parameters(){
-    function submitHandler(e){
-        alert("subitted the form")
+function Parameters({sliderValue, setSlidervalue, submitHandler}){
+    
+    function handleParam(e){
+        if(e.target.value>100 || e.target.value<0)return;
+        setSlidervalue({...sliderValue,[e.target.name]: e.target.value,});
     }
+    
     return(
         <div className={styles.wrapper}>
             <div className={styles.graph}>
@@ -28,11 +32,11 @@ function Parameters(){
                     <button onClick={submitHandler}>Start</button>
                 </div>
                 <div className={styles.sliders}>
-                    <Slider name="Infectioness"/>
-                    <Slider name="Social distancing"/>
-                    <Slider name="a"/>
-                    <Slider name="b"/>
-                    <Slider name="c"/>
+                    <Slider onChange={handleParam} sliderValue={sliderValue.Infectioness} name="Infectioness"/>
+                    <Slider onChange={handleParam} sliderValue={sliderValue.param2} name="param2"/>
+                    <Slider onChange={handleParam} sliderValue={sliderValue.param3} name="param3"/>
+                    <Slider onChange={handleParam} sliderValue={sliderValue.param4} name="param4"/>
+                    <Slider onChange={handleParam} sliderValue={sliderValue.param5} name="param5"/>
                 </div>
             </div>
         </div>
