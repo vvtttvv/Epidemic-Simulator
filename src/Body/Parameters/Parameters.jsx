@@ -1,12 +1,36 @@
-
 import styles from "./Parameters.module.css"
 import Slider from "./Slider/Slider"
+import {useState} from 'react'
 function Parameters({sliderValue, setSlidervalue, submitHandler}){
+    const [selectedPreset, setSelectedPreset]=useState('');
+    const infectionPresets=[
+        {name:"Custom",Infectioness:1, Radius:1, Distancing:1, Speed: 1,Quarantine: 1,},
+        {name:"Covid-19",Infectioness:50, Radius:100, Distancing:30, Speed: 50,Quarantine: 14,},
+        {name:"EBOLA",Infectioness:20, Radius:1, Distancing:23, Speed: 1,Quarantine: 7,},
+        {name:"HIV",Infectioness:10, Radius:1, Distancing:15, Speed: 1,Quarantine: 28,},
+    ]
     
+    function handlePresetsOnChange(e){
+        setSelectedPreset(e.target.value)
+        const selectedPreset = selectObjectByName(e.target.value);
+        console.log(selectedPreset);
+        setSlidervalue({
+            Infectioness: selectedPreset.Infectioness,
+            Radius: selectedPreset.Radius,
+            Distancing: selectedPreset.Distancing,
+            Speed: selectedPreset.Speed,
+            Quarantine: selectedPreset.Quarantine,
+        });
+    }
+    function selectObjectByName(name) {
+        return infectionPresets.find(preset => preset.name === name);
+    }
     function handleParam(e){
         if(e.target.value>100 || e.target.value<0)return;
         setSlidervalue({...sliderValue,[e.target.name]: e.target.value,});
+        setSelectedPreset('Custom');
     }
+    const sliderNames = ["Infectioness", "Radius of infection", "Social distancing", "Speed", "Quarantine time"];
     
     return(
         <div className={styles.wrapper}>
@@ -16,27 +40,21 @@ function Parameters({sliderValue, setSlidervalue, submitHandler}){
             </div>
             <div className={styles.settings}>
                 <div className={styles.buttons}>
-                    <select>
-                        Presets(change tag)
-                        <option value="covid">covid</option>
-                        <option value="HIV">HIV</option>
-                        <option value="covid">covid</option>
-                        <option value="HIV">HIV</option>
-                        <option value="covid">covid</option>
-                        <option value="HIV">HIV</option>
-                        <option value="covid">covid</option>
-                        <option value="HIV">HIV</option>
-                        <option value="covid">covid</option>
+                    <p>Presets</p>
+                    <select onChange={handlePresetsOnChange} value={selectedPreset}>
+                        <option value="Custom">Custom</option>
+                        <option value="Covid-19">Covid-19</option>
+                        <option value="EBOLA">EBOLA</option>
                         <option value="HIV">HIV</option>
                     </select>
                     <button onClick={submitHandler}>Start</button>
                 </div>
                 <div className={styles.sliders}>
-                    <Slider onChange={handleParam} sliderValue={sliderValue.Infectioness} name="Infectioness"/>
-                    <Slider onChange={handleParam} sliderValue={sliderValue.param2} name="param2"/>
-                    <Slider onChange={handleParam} sliderValue={sliderValue.param3} name="param3"/>
-                    <Slider onChange={handleParam} sliderValue={sliderValue.param4} name="param4"/>
-                    <Slider onChange={handleParam} sliderValue={sliderValue.param5} name="param5"/>
+                    <Slider onChange={handleParam} sliderValue={sliderValue.Infectioness} name="Infectioness" prop_name={sliderNames[0]}/>
+                    <Slider onChange={handleParam} sliderValue={sliderValue.Radius} name="Radius" prop_name={sliderNames[1]}/>
+                    <Slider onChange={handleParam} sliderValue={sliderValue.Distancing} name="Distancing" prop_name={sliderNames[2]}/>
+                    <Slider onChange={handleParam} sliderValue={sliderValue.Speed} name="Speed" prop_name={sliderNames[3]}/>
+                    <Slider onChange={handleParam} sliderValue={sliderValue.Quarantine} name="Quarantine" prop_name={sliderNames[4]}/>
                 </div>
             </div>
         </div>
