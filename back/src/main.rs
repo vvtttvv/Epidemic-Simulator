@@ -30,8 +30,8 @@ fn send_data(data_map: HashMap<String, String>, mut stream: TcpStream) -> Result
     };
 
     for _ in 0..iterations {
-        let responses: Vec<HashMap<String, String>> = algorithm();
-        let json_response = serde_json::to_string(&responses).unwrap();
+        let response: Vec<HashMap<String, String>> = algorithm();
+        let json_response = serde_json::to_string(&response).unwrap();
 
         let mut response_headers = String::new();
         response_headers.push_str("HTTP/1.1 200 OK\r\n");
@@ -41,8 +41,8 @@ fn send_data(data_map: HashMap<String, String>, mut stream: TcpStream) -> Result
         response_headers.push_str("Access-Control-Allow-Headers: Content-Type\r\n"); // Allow Content-Type header
         response_headers.push_str(&format!("Content-Length: {}\r\n\r\n", json_response.len()));
 
-        let response = format!("{}{}", response_headers, json_response);
-        if let Err(_) = stream.write_all(response.as_bytes()) {
+        let final_response = format!("{}{}", response_headers, json_response);
+        if let Err(_) = stream.write_all(final_response.as_bytes()) {
             return Err(());
         }
     }
