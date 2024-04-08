@@ -42,29 +42,37 @@ function Body(){
         ]);
     }, []);*/
 
-    const submitHandler=async (e)=>{
-        let requiredDataString=JSON.stringify(sliderValue);
+    // Define webSocket globally
+
+    const submitHandler = async (e) => {
+        let requiredDataString = JSON.stringify(sliderValue);
         console.log(requiredDataString);
-        fetchData(requiredDataString);
-    }
-    const fetchData = async (requiredDataString) => {
-        try {
-            const response = await axios.post('http://192.168.188.76:8080', requiredDataString);
-            console.log("success");
-            setResponseData(response.data);
-            console.log(response)
-        } catch (error) {
+        startWebSocket(requiredDataString); // Start SSE connection
+    };
+
+    
+    const startWebSocket = (requiredDataString) => {
+        const webSocket = new WebSocket('http://192.168.188.76:8080/'); // websopcket endpoint on server
+
+        webSocket.onopen = () => {
+            console.log('Connected to server');
+            webSocket.send(requiredDataString);
+        };
+
+        webSocket.onmessage = (event) => {
+            
+            console.log("Received:", event.data);
+            // Process the received data here
+            setResponseData(event.data);
+        };
+        webSocket.onerror = (error) => {
+            console.error("Error:", error);
+            // Handle error
             setError(error.message);
-        }
+            webSocket.close(); // Close the SSE connection
+        };
     };
     
-    
-    /*useEffect(() => {
-        const intervalId = setInterval(() => {
-            fetchData();
-        }, 100);
-        return () => clearInterval(intervalId);
-    }, []);*/ //cchoose a proper dependency array
 
     return(
         <div className={styles.body}>
