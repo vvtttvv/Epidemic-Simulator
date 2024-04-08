@@ -3,19 +3,20 @@ import axios from 'axios'
 import styles from "./Body.module.css"
 import Parameters from "./Parameters/Parameters";
 import Map from "./Map/map";
-function Body(  ){
+function Body(){
     const [sliderValue, setSlidervalue]=useState({
         Infectioness: 1,
         Radius: 1,
         Distancing: 1,
         Speed: 1,
         Quarantine: 1,
+        Iterations: 1,
     });
-    const [responseData, setResponseData] = useState();
+    const [responseData, setResponseData] = useState('');
     const [error, setError] = useState(null);
     
     
-    useEffect(() => {//function only to see if canvas works
+    /*useEffect(() => {//function only to see if canvas works
         setResponseData([
             { id: 1, position_x: 10, position_y: 10, infected: true, dead: false }, 
             { id: 2, position_x: 20, position_y: 20, infected: false, dead: false },
@@ -29,38 +30,36 @@ function Body(  ){
             { id: 1, position_x: 190, position_y: 10, infected: true, dead: false }, 
             { id: 2, position_x: 270, position_y: 20, infected: false, dead: false },
             { id: 3, position_x: 500, position_y: 500, infected: true, dead: true }, 
+            { id: 2, position_x: 270, position_y: 20, infected: false, dead: false },
+            { id: 2, position_x: 270, position_y: 30, infected: false, dead: false },
+            { id: 2, position_x: 270, position_y: 40, infected: false, dead: false },
+            { id: 2, position_x: 270, position_y: 50, infected: false, dead: false },
+            { id: 2, position_x: 270, position_y: 60, infected: false, dead: false },
+            { id: 2, position_x: 270, position_y: 70, infected: false, dead: false },
+            { id: 2, position_x: 270, position_y: 80, infected: false, dead: false },
+            { id: 2, position_x: 270, position_y: 90, infected: false, dead: false },
+
         ]);
-    }, []);
+    }, []);*/
 
     const submitHandler=async (e)=>{
-        let sliderData=[];
-        let requiredDataString='{';
-        for (let key in sliderValue) {//modify object to array
-            sliderData.push(key);
-            sliderData.push(sliderValue[key]);
-        }
-       
-        for(let el in sliderData){//save as required string
-            requiredDataString+='<'+sliderData[el]+'>'+',';
-        }
-        requiredDataString+='}';
-
-        console.log(sliderData);
+        let requiredDataString=JSON.stringify(sliderValue);
         console.log(requiredDataString);
-
         fetchData(requiredDataString);
     }
     const fetchData = async (requiredDataString) => {
         try {
-            const response = await axios.post('http://192.168.1.7:8080', requiredDataString);
+            const response = await axios.post('http://192.168.188.76:8080', requiredDataString);
+            console.log("success");
             setResponseData(response.data);
+            console.log(response)
         } catch (error) {
             setError(error.message);
         }
     };
     
     
-   /* useEffect(() => {
+    /*useEffect(() => {
         const intervalId = setInterval(() => {
             fetchData();
         }, 100);

@@ -4,10 +4,10 @@ import {useState} from 'react'
 function Parameters({sliderValue, setSlidervalue, submitHandler}){
     const [selectedPreset, setSelectedPreset]=useState('');
     const infectionPresets=[
-        {name:"Custom",Infectioness:1, Radius:1, Distancing:1, Speed: 1,Quarantine: 1,},
-        {name:"Covid-19",Infectioness:50, Radius:100, Distancing:30, Speed: 50,Quarantine: 14,},
-        {name:"EBOLA",Infectioness:20, Radius:1, Distancing:23, Speed: 1,Quarantine: 7,},
-        {name:"HIV",Infectioness:10, Radius:1, Distancing:15, Speed: 1,Quarantine: 28,},
+        {name:"Custom",Infectioness:1, Radius:1, Distancing:1, Speed: 1,Quarantine: 1, Iterations:1},
+        {name:"Covid-19",Infectioness:50, Radius:100, Distancing:30, Speed: 50,Quarantine: 14, Iterations:1},
+        {name:"EBOLA",Infectioness:20, Radius:1, Distancing:23, Speed: 1,Quarantine: 7, Iterations:1},
+        {name:"HIV",Infectioness:10, Radius:1, Distancing:15, Speed: 1,Quarantine: 28, Iterations:100},
     ]
     
     function handlePresetsOnChange(e){
@@ -20,6 +20,7 @@ function Parameters({sliderValue, setSlidervalue, submitHandler}){
             Distancing: selectedPreset.Distancing,
             Speed: selectedPreset.Speed,
             Quarantine: selectedPreset.Quarantine,
+            Iterations: selectedPreset.Iterations,
         });
     }
     function selectObjectByName(name) {
@@ -30,7 +31,7 @@ function Parameters({sliderValue, setSlidervalue, submitHandler}){
         setSlidervalue({...sliderValue,[e.target.name]: e.target.value,});
         setSelectedPreset('Custom');
     }
-    const sliderNames = ["Infectioness", "Radius of infection", "Social distancing", "Speed", "Quarantine time"];
+    const sliderNames = ["Infectioness", "Radius of infection", "Social distancing", "Speed", "Quarantine time", "Iterations"];
     
     return(
         <div className={styles.wrapper}>
@@ -55,6 +56,7 @@ function Parameters({sliderValue, setSlidervalue, submitHandler}){
                     <Slider onChange={handleParam} sliderValue={sliderValue.Distancing} name="Distancing" prop_name={sliderNames[2]}/>
                     <Slider onChange={handleParam} sliderValue={sliderValue.Speed} name="Speed" prop_name={sliderNames[3]}/>
                     <Slider onChange={handleParam} sliderValue={sliderValue.Quarantine} name="Quarantine" prop_name={sliderNames[4]}/>
+                    <Slider onChange={handleParam} sliderValue={sliderValue.Iterations} name="Iterations" prop_name={sliderNames[5]}/>
                 </div>
             </div>
         </div>

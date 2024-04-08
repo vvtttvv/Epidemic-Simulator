@@ -4,19 +4,19 @@ function Slider(props){
         <div className={styles.slider_container}>
             <div className={styles.parameter_info}>{props.prop_name}</div>
             <input value={props.sliderValue} 
-            type="range" 
-            min="1" 
-            max="100" 
+            type="range"
+            min='1' 
+            max='100' 
             className={styles.slider} 
             onChange={props.onChange} 
             name={props.name}
             />
             <input 
             value={props.sliderValue} 
-            type="text" 
+            type="number" 
             className={styles.textbox} 
             onChange={props.onChange} 
-            name={props.prop_name}
+            name={props.name}
             />
         </div>
     )
