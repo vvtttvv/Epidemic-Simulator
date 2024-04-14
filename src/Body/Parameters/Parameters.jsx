@@ -4,10 +4,10 @@ import {useState} from 'react'
 function Parameters({sliderValue, setSlidervalue, submitHandler}){
     const [selectedPreset, setSelectedPreset]=useState('');
     const infectionPresets=[
-        {name:"Custom",Infectioness:1, Radius:1, Distancing:1, Speed: 1,Quarantine: 1, Iterations:1},
-        {name:"Covid-19",Infectioness:50, Radius:100, Distancing:30, Speed: 50,Quarantine: 14, Iterations:1},
-        {name:"EBOLA",Infectioness:20, Radius:1, Distancing:23, Speed: 1,Quarantine: 7, Iterations:1},
-        {name:"HIV",Infectioness:10, Radius:1, Distancing:15, Speed: 1,Quarantine: 28, Iterations:100},
+        {name:"Custom",Infectioness:'1', Radius:'1', Distancing:'1', Speed: '1',Quarantine: '1', Iterations:'1'},
+        {name:"Covid-19",Infectioness:'50', Radius:'100', Distancing:'30', Speed: '50',Quarantine: '14', Iterations:'1'},
+        {name:"EBOLA",Infectioness:'20', Radius:'1', Distancing:'23', Speed: '1',Quarantine: '7', Iterations:'1'},
+        {name:"HIV",Infectioness:'10', Radius:'1', Distancing:'15', Speed: '1',Quarantine: '28', Iterations:'100'},
     ]
     
     function handlePresetsOnChange(e){

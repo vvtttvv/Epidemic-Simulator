@@ -33,3 +33,8 @@
 .community_button{
     border-radius: 0 30px 30px 0;
 }
+@media(max-width: 750px){
+    .wrapper{
+        width: 100% !important;
+    }
+}

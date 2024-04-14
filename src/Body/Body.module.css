@@ -4,3 +4,10 @@
     align-items: center;
     flex: 0 0 50%;
 }
+@media(max-width: 750px){
+    .body{
+        flex-direction: column-reverse;
+        margin: 0 auto;
+        padding: 5px;
+    }
+}
