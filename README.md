@@ -13,7 +13,7 @@ So the probability of getting sick is $p * t+1 \space \space  if \space  d(i,j) 
 d(i,j) is the Euclidean distance $\sqrt{(x_{i} - x_{j})^{2} + (y_{i} - y_{j})^{2}}$
 
 ## Death after time 
-Probability of surviving it given by a well known surviving formula $\large S(t) = e^{- \lamda t}$ were $\large \lamda$ is the probability of dying(cp).After some time t(cp) a person if it not die become helthy and recive some imunity i(cp) for getting sick next time and the formula for surviving will be $\large e^{-\lamda i t}$
+Probability of surviving it given by a well known surviving formula $\large S(t) = e^{- \lambda t}$ were $\large \lambda$ is the probability of dying(cp).After some time t(cp) a person if it not die become helthy and recive some imunity i(cp) for getting sick next time and the formula for surviving will be $\large e^{-\lambda i t}$
 
 ## Quarantined
 Is a simulation option that will enabled adds a quarantine zone where if a person is sick will go with probability of q(cp)
