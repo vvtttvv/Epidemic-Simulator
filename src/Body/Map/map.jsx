@@ -5,7 +5,7 @@ function Map({responseData}) {
     const [isPaused, setIsPaused] = useState(true);
     const canvasRef=useRef(null);
     let scale=1;
-    let displayWidth=500
+    let displayWidth=500;
     useEffect(() => {
         const canvas = canvasRef.current;
         canvas.width = displayWidth * scale;
@@ -14,13 +14,14 @@ function Map({responseData}) {
         for(let el in responseData){
             //set the position
             context.beginPath();
-            context.arc(responseData[el].position_x, responseData[el].position_y, 5, 0, 2*Math.PI);
-            if(responseData[el].dead===true){//conditions to set the color
-                context.fillStyle = 'gray';
-            }else if(responseData[el].infected===true){
+            context.arc(responseData[el].position[0], responseData[el].position[1], Math.round(Math.sqrt( (canvas.width*canvas.height/100) / (8* Math.PI))), 0, 2*Math.PI); //size_of_individuals will be Math.round(Math.sqrt( (canvas.width*canvas.height/numberofparticles) / (coefficient* Math.PI)))
+            //console.log("xpoz: "+responseData[el].position[0]+ " y_poz:"+responseData[el].position[1])
+            if(responseData[el].is_infected===true){//conditions to set the color
                 context.fillStyle = 'red';
-            }else{
+            }else if(responseData[el].alive===true){
                 context.fillStyle = 'blue';
+            }else{
+                context.fillStyle = 'gray';
             }
             context.fill();
             context.closePath();

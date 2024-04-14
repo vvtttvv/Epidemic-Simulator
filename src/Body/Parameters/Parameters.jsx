@@ -1,7 +1,7 @@
 import styles from "./Parameters.module.css"
 import Slider from "./Slider/Slider"
-import {useState} from 'react'
-function Parameters({sliderValue, setSlidervalue, submitHandler}){
+import {useEffect, useState, useRef} from 'react'
+function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
     const [selectedPreset, setSelectedPreset]=useState('');
     const infectionPresets=[
         {name:"Custom",Infectioness:'1', Radius:'1', Distancing:'1', Speed: '1',Quarantine: '1', Iterations:'1'},
@@ -9,11 +9,47 @@ function Parameters({sliderValue, setSlidervalue, submitHandler}){
         {name:"EBOLA",Infectioness:'20', Radius:'1', Distancing:'23', Speed: '1',Quarantine: '7', Iterations:'1'},
         {name:"HIV",Infectioness:'10', Radius:'1', Distancing:'15', Speed: '1',Quarantine: '28', Iterations:'100'},
     ]
+    const sliderNames = ["Infectioness", "Radius of infection", "Social distancing", "Speed", "Quarantine time", "Iterations"];
     
+    /////canvas handling
+    /*const canvasRef=useRef(null);
+    const canvas=canvasRef.current;
+    const ctx=canvas.getContext("2d");
+    let x_values=[];
+    let count_dead=[];
+    let count_infected=[];
+    let count_healthy=[]
+    let counter=1
+    useEffect(()=>{
+        //establishing the data arrays
+        x_values=[];
+        let alive_counter=0;
+        let dead_counter=0;
+        let infected_counter=0;
+        for(let i=0; i<responseData.length; i++){
+            if(alive) alive_counter++;//not an optimal approach for now. change to substraction if 'number of individuals' appear
+            if(infected) infected_counter++;
+            if(!infected && !alive) dead_counter++; 
+        }
+        count_dead.push(dead_counter);
+        count_healthy.push(alive_counter);
+        count_infected.push(infected_counter);
+        let interval=canvas.displayWidth/counter;
+        for(let i=0;i<counter; i++){
+            x_values.push(interval*i);
+        }
+        //first make a shape  for dead
+        //make a shape for infected
+        //make a shape for alive
+        counter++;
+    },[responseData]);
+    */
+
+    //////////
+
     function handlePresetsOnChange(e){
         setSelectedPreset(e.target.value)
         const selectedPreset = selectObjectByName(e.target.value);
-        console.log(selectedPreset);
         setSlidervalue({
             Infectioness: selectedPreset.Infectioness,
             Radius: selectedPreset.Radius,
@@ -31,12 +67,12 @@ function Parameters({sliderValue, setSlidervalue, submitHandler}){
         setSlidervalue({...sliderValue,[e.target.name]: e.target.value,});
         setSelectedPreset('Custom');
     }
-    const sliderNames = ["Infectioness", "Radius of infection", "Social distancing", "Speed", "Quarantine time", "Iterations"];
+   
     
     return(
         <div className={styles.wrapper}>
             <div className={styles.graph}>
-                <canvas className={styles.canvas}>
+                <canvas className={styles.canvas} >
                 </canvas>
             </div>
             <div className={styles.settings}>

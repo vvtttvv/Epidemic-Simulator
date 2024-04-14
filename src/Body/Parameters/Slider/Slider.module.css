@@ -46,4 +46,11 @@
 }
 .textbox{
     width: 5%;
+    background-color: black;
+    border: 1px solid grey;
+    border-radius: 5px;
+    color: grey;
+}
+.textbox:focus{
+    color: white;
 }
