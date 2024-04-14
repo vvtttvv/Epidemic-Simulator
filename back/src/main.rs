@@ -1,68 +1,65 @@
-mod algorithm;
-
-use algorithm::algorithm;
+use futures::stream::StreamExt;
+use futures::SinkExt;
 use std::collections::HashMap;
-use std::io::{Read, Write};
-use std::net::{TcpListener, TcpStream};
+use std::net::{IpAddr, Ipv4Addr, UdpSocket};
+use tokio::net::TcpListener;
+use tokio::net::TcpStream;
+use tokio_tungstenite::accept_async;
+use tokio_tungstenite::tungstenite::protocol::Message;
 
-fn receive_data(mut stream: TcpStream) {
-    let mut buffer = [0; 1024];
-    stream.read(&mut buffer).unwrap();
-    let request = String::from_utf8_lossy(&buffer[..]);
-    println!("Received data from frontend: {}", request);
-    let mut data_map = HashMap::new();
-    let trimmed_request = request.trim_start_matches('{').trim_end_matches('}'); // Remove leading and trailing '{' and '}'
-    for param in trimmed_request.split(',') {
-        if let Some((key, value)) = param.split_once(":") {
-            let key = key.trim().trim_matches('"').to_string(); // Remove leading and trailing quotes from the key
-            let value = value.trim().trim_matches('"').to_string(); // Remove leading and trailing quotes from the value
-            data_map.insert(key, value);
-        }
+#[tokio::main]
+async fn main() {
+    let addr = "0.0.0.0:8080";
+    let listener = TcpListener::bind(addr).await.expect("Failed to bind");
+    let ip = get_local_ip().unwrap();
+    println!("Server running on {}:8080", ip);
+
+    let mut clients: HashMap<usize, String> = HashMap::new();
+
+    while let Ok((stream, addr)) = listener.accept().await {
+        let client_id = clients.len() + 1;
+        clients.insert(client_id, addr.to_string());
+        println!("Client {} connected", client_id);
+        tokio::spawn(handle_connection(stream, client_id));
     }
-
-    let _ = send_data(data_map, stream);
 }
 
-fn send_data(data_map: HashMap<String, String>, mut stream: TcpStream) -> Result<(), ()> {
-    let iterations = match data_map.get("iterations") {
-        Some(val) => val.parse::<u32>().unwrap_or(1),
-        None => 1,
-    };
+async fn handle_connection(stream: TcpStream, client_id: usize) {
+    let ws_stream = accept_async(stream)
+        .await
+        .expect("Error during WebSocket handshake");
 
-    for _ in 0..iterations {
-        let response: Vec<HashMap<String, String>> = algorithm();
-        let json_response = serde_json::to_string(&response).unwrap();
+    let (mut ws_sender, mut ws_receiver) = ws_stream.split();
 
-        let mut response_headers = String::new();
-        response_headers.push_str("HTTP/1.1 200 OK\r\n");
-        response_headers.push_str("Content-Type: application/json\r\n");
-        response_headers.push_str("Access-Control-Allow-Origin: *\r\n"); // Allow requests from any origin (for testing purposes)
-        response_headers.push_str("Access-Control-Allow-Methods: POST, GET, OPTIONS\r\n"); // Allow POST, GET, OPTIONS requests
-        response_headers.push_str("Access-Control-Allow-Headers: Content-Type\r\n"); // Allow Content-Type header
-        response_headers.push_str(&format!("Content-Length: {}\r\n\r\n", json_response.len()));
-
-        let final_response = format!("{}{}", response_headers, json_response);
-        if let Err(_) = stream.write_all(final_response.as_bytes()) {
-            return Err(());
-        }
-    }
-
-    Ok(())
-}
-
-fn main() {
-    let listener = TcpListener::bind("127.0.0.1:8080").unwrap();
-    println!("Server listening on port 8080...");
-
-    for stream in listener.incoming() {
-        match stream {
-            Ok(stream) => {
-                println!("New connection: {}", stream.peer_addr().unwrap());
-                receive_data(stream);
-            }
+    while let Some(msg) = ws_receiver.next().await {
+        let msg = msg.expect(format!("Error receiving message from client {}", client_id).as_str());
+        println!("{}", msg);
+        let map: HashMap<String, String> = match serde_json::from_str(&msg.to_string()) {
+            Ok(map) => map,
             Err(e) => {
-                println!("Error: {}", e);
+                eprintln!("Error parsing message: {:?}", e);
+                return;
+            }
+        };
+        println!("Parsed map:");
+        for (key, value) in &map {
+            println!("{}: {}", key, value);
+        }
+        for i in 0..1000 {
+            let message = Message::Text(format!("Message {}", i));
+            if let Err(e) = ws_sender.send(message).await {
+                eprintln!("Error sending message: {:?}", e);
+                return;
             }
         }
+    }
+}
+
+fn get_local_ip() -> Option<Ipv4Addr> {
+    let socket = UdpSocket::bind("0.0.0.0:0").ok()?;
+    socket.connect("8.8.8.8:80").ok()?;
+    match socket.local_addr().ok()?.ip() {
+        IpAddr::V4(ipv4) => Some(ipv4),
+        _ => None,
     }
 }
