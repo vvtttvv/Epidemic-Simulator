@@ -59,3 +59,6 @@ def model_equations(s_t, e_t, i_t, a_t, m_t, d_t, n_t, m_p6m, p_phi, p):
     n_n = s_n + e_n + i_n + a_n + m_n + d_n
     return (s_n, e_n, i_n, a_n, m_n, d_n, n_n)
 ```
+
+## Bibliography:
+https://www.mdpi.com/2076-3417/13/22/12252
