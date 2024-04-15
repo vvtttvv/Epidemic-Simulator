@@ -5,12 +5,12 @@ import Map from "./Map/map";
 
 function Body(){
     const [sliderValue, setSlidervalue]=useState({
-        Infectioness: '1',
-        Radius: '1',
-        Distancing: '1',
-        Speed: '1',
-        Quarantine: '1',
-        Iterations: '1',
+        movement_speed: '1',
+        num_individuals:'100',
+        infection_probability: '1',
+        infection_radius: '1',
+        probability_of_dying: '1',
+        num_iterations: '10000',
     });
     const [responseData, setResponseData] = useState('');
     const [error, setError] = useState(null);
@@ -32,8 +32,7 @@ function Body(){
     };
     const startWebSocket = (requiredDataString) => {
         
-        const webSocket = new WebSocket('ws://192.168.200.38:8080/'); // websocket endpoint on server
-        console.log(webSocket)
+        const webSocket = new WebSocket('ws://192.168.188.76:8080/'); // websocket endpoint on server
         webSocket.onopen = () => {
             console.log('Connected to server');
             webSocket.send(requiredDataString);

@@ -5,8 +5,8 @@ function Slider(props){
             <div className={styles.parameter_info}>{props.prop_name}</div>
             <input value={props.sliderValue} 
             type="range"
-            min='1' 
-            max='100' 
+            min={props.minmax[0]} 
+            max={props.minmax[1]}  
             className={styles.slider} 
             onChange={props.onChange} 
             name={props.name}
@@ -14,6 +14,7 @@ function Slider(props){
             <input 
             value={props.sliderValue} 
             type="number" 
+              
             className={styles.textbox} 
             onChange={props.onChange} 
             name={props.name}

@@ -4,12 +4,12 @@ import {useEffect, useState, useRef} from 'react'
 function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
     const [selectedPreset, setSelectedPreset]=useState('');
     const infectionPresets=[
-        {name:"Custom",Infectioness:'1', Radius:'1', Distancing:'1', Speed: '1',Quarantine: '1', Iterations:'1'},
-        {name:"Covid-19",Infectioness:'50', Radius:'100', Distancing:'30', Speed: '50',Quarantine: '14', Iterations:'1'},
-        {name:"EBOLA",Infectioness:'20', Radius:'1', Distancing:'23', Speed: '1',Quarantine: '7', Iterations:'1'},
-        {name:"HIV",Infectioness:'10', Radius:'1', Distancing:'15', Speed: '1',Quarantine: '28', Iterations:'100'},
+        {movement_speed: 2, name:"Custom",infection_probability:'1', infection_radius:'1', Distancing:'1', movement_speed: '1'},
+        {movement_speed: 3, name:"Covid-19",infection_probability:'50', infection_radius:'100', Distancing:'30', movement_speed: '50'},
+        {movement_speed: 4, name:"EBOLA",infection_probability:'20', infection_radius:'1', Distancing:'23', movement_speed: '1'},
+        {movement_speed: 5, name:"HIV",infection_probability:'10', infection_radius:'1', Distancing:'15', movement_speed: '1'},
     ]
-    const sliderNames = ["Infectioness", "Radius of infection", "Social distancing", "Speed", "Quarantine time", "Iterations"];
+    const sliderNames = ["Movement speed","Number of individuals", "Number of iterations", "Infection Radius", "Infection probability", "Dying probability"];
     
     /////canvas handling
     /*const canvasRef=useRef(null);
@@ -43,14 +43,15 @@ function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
         //make a shape for alive
         counter++;
     },[responseData]);
+    
     */
-
     //////////
 
     function handlePresetsOnChange(e){
         setSelectedPreset(e.target.value)
         const selectedPreset = selectObjectByName(e.target.value);
         setSlidervalue({
+            movement_speed: selectedPreset.movement_speed,
             Infectioness: selectedPreset.Infectioness,
             Radius: selectedPreset.Radius,
             Distancing: selectedPreset.Distancing,
@@ -63,11 +64,12 @@ function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
         return infectionPresets.find(preset => preset.name === name);
     }
     function handleParam(e){
-        if(e.target.value>100 || e.target.value<0)return;
+        if(e.target.value<parseInt(e.target.min) || e.target.value>parseInt(e.target.max)){
+            return;
+        }
         setSlidervalue({...sliderValue,[e.target.name]: e.target.value,});
         setSelectedPreset('Custom');
     }
-   
     
     return(
         <div className={styles.wrapper}>
@@ -87,15 +89,21 @@ function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
                     <button onClick={submitHandler}>Start</button>
                 </div>
                 <div className={styles.sliders}>
-                    <Slider onChange={handleParam} sliderValue={sliderValue.Infectioness} name="Infectioness" prop_name={sliderNames[0]}/>
-                    <Slider onChange={handleParam} sliderValue={sliderValue.Radius} name="Radius" prop_name={sliderNames[1]}/>
-                    <Slider onChange={handleParam} sliderValue={sliderValue.Distancing} name="Distancing" prop_name={sliderNames[2]}/>
-                    <Slider onChange={handleParam} sliderValue={sliderValue.Speed} name="Speed" prop_name={sliderNames[3]}/>
-                    <Slider onChange={handleParam} sliderValue={sliderValue.Quarantine} name="Quarantine" prop_name={sliderNames[4]}/>
-                    <Slider onChange={handleParam} sliderValue={sliderValue.Iterations} name="Iterations" prop_name={sliderNames[5]}/>
+                    <Slider minmax={['1','10']} onChange={handleParam} sliderValue={sliderValue.movement_speed} name="movement_speed" prop_name={sliderNames[0]}/>
+                    <Slider minmax={['1','200']} onChange={handleParam} sliderValue={sliderValue.num_individuals} name="num_individuals" prop_name={sliderNames[1]}/>
+                    <Slider minmax={['1','10000']} onChange={handleParam} sliderValue={sliderValue.num_iterations} name="num_iterations" prop_name={sliderNames[2]}/>
+                    <Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.infection_radius} name="infection_radius" prop_name={sliderNames[3]}/>
+                    <Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.infection_probability} name="infection_probability" prop_name={sliderNames[4]}/>                
+                    <Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.probability_of_dying} name="probability_of_dying" prop_name={sliderNames[5]}/>  
                 </div>
             </div>
         </div>
     )
 }
 export default Parameters;
+/*<Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.Infectioness} name="Infectioness" prop_name={sliderNames[1]}/>
+                    <Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.Radius} name="Radius" prop_name={sliderNames[2]}/>
+                    <Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.Distancing} name="Distancing" prop_name={sliderNames[3]}/>
+                    <Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.Speed} name="Speed" prop_name={sliderNames[4]}/>
+                    <Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.Quarantine} name="Quarantine" prop_name={sliderNames[5]}/>
+                    <Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.Iterations} name="Iterations" prop_name={sliderNames[6]}/>*/   
