@@ -4,10 +4,10 @@ import {useEffect, useState, useRef} from 'react'
 function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
     const [selectedPreset, setSelectedPreset]=useState('');
     const infectionPresets=[
-        {movement_speed: 2, name:"Custom",infection_probability:'1', infection_radius:'1', Distancing:'1', movement_speed: '1'},
-        {movement_speed: 3, name:"Covid-19",infection_probability:'50', infection_radius:'100', Distancing:'30', movement_speed: '50'},
-        {movement_speed: 4, name:"EBOLA",infection_probability:'20', infection_radius:'1', Distancing:'23', movement_speed: '1'},
-        {movement_speed: 5, name:"HIV",infection_probability:'10', infection_radius:'1', Distancing:'15', movement_speed: '1'},
+        {name:"Custom",infection_probability:'1', infection_radius:'1', movement_speed: '1', probability_of_dying:'10'},
+        {name:"Covid-19",infection_probability:'50', infection_radius:'100', movement_speed: '50', probability_of_dying:'10'},
+        {name:"EBOLA",infection_probability:'20', infection_radius:'1', movement_speed: '1', probability_of_dying:'10'},
+        {name:"HIV",infection_probability:'10', infection_radius:'1', movement_speed: '1', probability_of_dying:'10'},
     ]
     const sliderNames = ["Movement speed","Number of individuals", "Number of iterations", "Infection Radius", "Infection probability", "Dying probability"];
     
@@ -51,13 +51,14 @@ function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
         setSelectedPreset(e.target.value)
         const selectedPreset = selectObjectByName(e.target.value);
         setSlidervalue({
+            ...sliderValue,
             movement_speed: selectedPreset.movement_speed,
-            Infectioness: selectedPreset.Infectioness,
-            Radius: selectedPreset.Radius,
-            Distancing: selectedPreset.Distancing,
-            Speed: selectedPreset.Speed,
-            Quarantine: selectedPreset.Quarantine,
-            Iterations: selectedPreset.Iterations,
+            infection_probability: selectedPreset.infection_probability,
+            infection_radius: selectedPreset.infection_radius,
+            probability_of_dying: selectedPreset.probability_of_dying,
+            
+            //num_individuals: selectedPreset.num_individuals,
+            //num_iterations: selectedPreset.num_iterations,
         });
     }
     function selectObjectByName(name) {
