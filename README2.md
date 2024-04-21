@@ -20,34 +20,26 @@ The SEIAMD model that we propose is based on the article “A Mathematical Model
 ## Model Parameters
 The model parameters are defined as follows:
 
-- **β** -- effective contact rate (product of the total contact rate and the transmission risk); the rate at which the contact between a susceptible individual and others infected will cause the susceptible individual to become infected. The parameters **β<sub>i</sub>** and **β<sub>a</sub>** represent the effective contact rate for the identified and for the asymptomatic, respectively. Considering the scientific research, we assume that **β<sub>a</sub> = 0.58β<sub>i</sub>**. On the other hand, **β<sub>i</sub>** is calculated by the product of basic reproduction number (**R<sub>0</sub>**) and recovery rate (**γ**):
+- β -- effective contact rate (product of the total contact rate and the transmission risk); the rate at which the contact between a susceptible individual and others infected will cause the susceptible individual to become infected. The parameters β<sub>i</sub> and β<sub>a</sub> represent the effective contact rate for the identified and for the asymptomatic, respectively. Considering the scientific research, we assume that β<sub>a</sub> = 0.58β<sub>i</sub>. On the other hand, β<sub>i</sub> is calculated by the product of basic reproduction number (R<sub>0</sub>) and recovery rate (γ):
+  - β<sub>i</sub> = R<sub>0</sub> × γ
 
-    <img src="https://render.githubusercontent.com/render/math?math=\large \beta_i = R_0 \times \gamma">
-
-- **ϕ** -- the number of individuals immunized by vaccine.
-- **σ** -- represents the proportion of immunized individuals that are susceptible again after a period of time (rate of loss of immunity).
-- **λ** -- the latency rate.
-- **α** -- the proportion of infected individuals that are identified, and we assume that non-identified individuals are asymptomatic.
-- **γ** -- the recovery rate.
-- **μ** -- the mortality rate.
-- **R<sub>0</sub>** -- basic reproduction number.
+- ϕ -- the number of individuals immunized by vaccine.
+- σ -- represents the proportion of immunized individuals that are susceptible again after a period of time (rate of loss of immunity).
+- λ -- the latency rate.
+- α -- the proportion of infected individuals that are identified, and we assume that non-identified individuals are asymptomatic.
+- γ -- the recovery rate.
+- μ -- the mortality rate.
+- R<sub>0</sub> -- basic reproduction number.
 
 ## Model Equations
 We decided to use the SEIAMD model that was formulated as a discrete-time model. A fast and direct way to discretize the model is by the forward Euler method, using the formula:
-
-<img src="https://render.githubusercontent.com/render/math?math=\large y_{n+1} = y_n %2B \Delta t f(t, y(t)), \quad \text{for } n = 0, 1, 2, \ldots">
+![image](https://github.com/vvtttvv/Epidemic-Simulator/assets/110112748/38845764-348e-4acb-9a48-83b0402b9aab)
 
 with **Δt = 1** day.
 Thus, by applying the same procedure described above, the resulting system of difference equations that rule the SEIAMD model behavior is:
 
-<img src="https://render.githubusercontent.com/render/math?math=\large \begin{aligned}
-S_{t%2B1} &amp;= S_t - \beta_i \frac{S_t I_t}{N_t} - \beta_a \frac{S_t A_t}{N_t} - \phi_t %2B \sigma M^*, \\
-E_{t%2B1} &amp;= E_t %2B \beta_i \frac{S_t I_t}{N_t} %2B \beta_a \frac{S_t A_t}{N_t} - \lambda E_t, \\
-I_{t%2B1} &amp;= I_t %2B \alpha \lambda E_t - \gamma I_t - \mu I_t, \\
-A_{t%2B1} &amp;= A_t %2B (1 - \alpha) \lambda E_t - \gamma A_t, \\
-M_{t%2B1} &amp;= M_t %2B \gamma I_t %2B \gamma A_t %2B \phi_t - \sigma M^*, \\
-D_{t%2B1} &amp;= D_t %2B \mu I_t,
-\end{aligned}">
+![image](https://github.com/vvtttvv/Epidemic-Simulator/assets/110112748/96947bc2-ec6d-4b2d-98db-a575479a8937)
+
 
 where **N<sub>t</sub> = S<sub>t</sub> + E<sub>t</sub> + I<sub>t</sub> + A<sub>t</sub> + M<sub>t</sub> + D<sub>t</sub>**.
 
