@@ -17,48 +17,39 @@ The SEIAMD model that we propose is based on the article “A Mathematical Model
 - **M - Immunized:** Individuals who have acquired immunity, either post-infection or through vaccination, with consideration for the potential decrease in immunity over time.
 - **D - Deceased:** Individuals who have succumbed to the virus. This model assumes that deceased individuals had been positively identified.
 
-## SEIAMD Model Parameters
+## Model Parameters
+The model parameters are defined as follows:
 
-The SEIAMD model incorporates several key parameters to simulate the spread and control of infectious diseases with realistic precision:
+- **β** -- effective contact rate (product of the total contact rate and the transmission risk); the rate at which the contact between a susceptible individual and others infected will cause the susceptible individual to become infected. The parameters **β<sub>i</sub>** and **β<sub>a</sub>** represent the effective contact rate for the identified and for the asymptomatic, respectively. Considering the scientific research, we assume that **β<sub>a</sub> = 0.58β<sub>i</sub>**. On the other hand, **β<sub>i</sub>** is calculated by the product of basic reproduction number (**R<sub>0</sub>**) and recovery rate (**γ**):
 
-- **β (Effective Contact Rate):** A measure combining the rate of contact and the probability of transmission. It includes variant-specific contact rates.
-- **φ (Vaccination Parameter):** Denotes the number of individuals immunized by vaccination, accounting for different efficacy rates post-dose.
-- **σ (Re-Susceptibility Rate):** The fraction of immunized individuals who can become susceptible again.
-- **p (Immunity Waning Period):** The time frame after which immunity starts to wane.
-- **λ (Latency Rate):** The incubation period for the virus, varies according to different viral strains.
-- **α (Asymptomatic Case Proportion):** The estimated proportion of infected individuals who are asymptomatic and thus not identified.
-- **γ (Recovery Rate):** Calculated based on the number of individuals discharged from medical care over a specified time frame.
-- **μ (Mortality Rate):** Determined from official data, this rate reflects the proportion of the population that succumbs to the disease over a given time period.
+    <img src="https://render.githubusercontent.com/render/math?math=\large \beta_i = R_0 \times \gamma">
 
-These parameters enable the model to more accurately reflect the complexities of epidemic trends, considering the impact of interventions like vaccination and natural disease progression.
-
-```python
-class Parameters:
-    def __init__(self, date, beta_i, lambda_p, alpha, gamma, mu, sigma):
-        self.date = date
-        self.beta_i = beta_i
-        self.lambda_p = lambda_p
-        self.alpha = alpha
-        self.gamma = gamma
-        self.mu = mu
-        self.sigma = sigma
-```
+- **ϕ** -- the number of individuals immunized by vaccine.
+- **σ** -- represents the proportion of immunized individuals that are susceptible again after a period of time (rate of loss of immunity).
+- **λ** -- the latency rate.
+- **α** -- the proportion of infected individuals that are identified, and we assume that non-identified individuals are asymptomatic.
+- **γ** -- the recovery rate.
+- **μ** -- the mortality rate.
+- **R<sub>0</sub>** -- basic reproduction number.
 
 ## Model Equations
-The resulting system of difference equations that rule the SEIAMD model behavior is:
-![image](https://github.com/vvtttvv/Epidemic-Simulator/assets/110112748/30ae744b-c8bc-48a7-9215-9502840b0cea)
+We decided to use the SEIAMD model that was formulated as a discrete-time model. A fast and direct way to discretize the model is by the forward Euler method, using the formula:
 
-```python
-def model_equations(s_t, e_t, i_t, a_t, m_t, d_t, n_t, m_p6m, p_phi, p):
-    s_n = s_t - p.beta_i * s_t / n_t * i_t - p.beta_a * s_t / n_t * a_t - p_phi + p.sigma * m_p6m
-    e_n = e_t + p.beta_i * s_t / n_t * i_t + p.beta_a * s_t / n_t * a_t - p.lambda_p * e_t
-    i_n = i_t + p.alpha * p.lambda_p * e_t - p.gamma * i_t - p.mu * i_t
-    a_n = a_t + (1 - p.alpha) * p.lambda_p * e_t - p.gamma * a_t
-    m_n = m_t + p.gamma * i_t + p.gamma * a_t + p_phi - p.sigma * m_p6m
-    d_n = d_t + p.mu * i_t
-    n_n = s_n + e_n + i_n + a_n + m_n + d_n
-    return (s_n, e_n, i_n, a_n, m_n, d_n, n_n)
-```
+<img src="https://render.githubusercontent.com/render/math?math=\large y_{n+1} = y_n %2B \Delta t f(t, y(t)), \quad \text{for } n = 0, 1, 2, \ldots">
+
+with **Δt = 1** day.
+Thus, by applying the same procedure described above, the resulting system of difference equations that rule the SEIAMD model behavior is:
+
+<img src="https://render.githubusercontent.com/render/math?math=\large \begin{aligned}
+S_{t%2B1} &amp;= S_t - \beta_i \frac{S_t I_t}{N_t} - \beta_a \frac{S_t A_t}{N_t} - \phi_t %2B \sigma M^*, \\
+E_{t%2B1} &amp;= E_t %2B \beta_i \frac{S_t I_t}{N_t} %2B \beta_a \frac{S_t A_t}{N_t} - \lambda E_t, \\
+I_{t%2B1} &amp;= I_t %2B \alpha \lambda E_t - \gamma I_t - \mu I_t, \\
+A_{t%2B1} &amp;= A_t %2B (1 - \alpha) \lambda E_t - \gamma A_t, \\
+M_{t%2B1} &amp;= M_t %2B \gamma I_t %2B \gamma A_t %2B \phi_t - \sigma M^*, \\
+D_{t%2B1} &amp;= D_t %2B \mu I_t,
+\end{aligned}">
+
+where **N<sub>t</sub> = S<sub>t</sub> + E<sub>t</sub> + I<sub>t</sub> + A<sub>t</sub> + M<sub>t</sub> + D<sub>t</sub>**.
 
 ## Bibliography:
 https://www.mdpi.com/2076-3417/13/22/12252
