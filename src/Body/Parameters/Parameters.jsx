@@ -3,6 +3,10 @@ import Slider from "./Slider/Slider"
 import {useEffect, useState, useRef} from 'react'
 function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
     const [selectedPreset, setSelectedPreset]=useState('');
+    const [counter, setCounter]=useState(1);
+    const [count_dead, setCount_dead]=useState([0, 0]);
+    const [count_infected, setCount_infected]=useState([0, 0]);
+    
     const infectionPresets=[
         {name:"Custom",infection_probability:'1', infection_radius:'1', movement_speed: '1', probability_of_dying:'10'},
         {name:"Covid-19",infection_probability:'50', infection_radius:'100', movement_speed: '50', probability_of_dying:'10'},
@@ -12,39 +16,88 @@ function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
     const sliderNames = ["Movement speed","Number of individuals", "Number of iterations", "Infection Radius", "Infection probability", "Dying probability"];
     
     /////canvas handling
-    /*const canvasRef=useRef(null);
-    const canvas=canvasRef.current;
-    const ctx=canvas.getContext("2d");
+    const canvasRef=useRef(null);
     let x_values=[];
-    let count_dead=[];
-    let count_infected=[];
-    let count_healthy=[]
-    let counter=1
+
+    function resetCanvas(){
+        const canvas=canvasRef.current;
+        const ctx=canvas.getContext("2d");
+        setCount_dead([0,0]);
+        setCount_infected([0,0]);
+        setCounter(1);
+
+        ctx.beginPath();
+        ctx.fillStyle = '#3754e6';
+        ctx.fillRect(0,0,canvas.width, canvas.height)
+        ctx.fill();
+        ctx.closePath();
+
+    }
+    
     useEffect(()=>{
-        //establishing the data arrays
+        const canvas=canvasRef.current;
+        canvas.width = 7000;
+        canvas.height = 3000;
+        const ctx=canvas.getContext("2d");
+        const pixels_per_unit=canvas.height/responseData.length;
         x_values=[];
-        let alive_counter=0;
+        
         let dead_counter=0;
         let infected_counter=0;
         for(let i=0; i<responseData.length; i++){
-            if(alive) alive_counter++;//not an optimal approach for now. change to substraction if 'number of individuals' appear
-            if(infected) infected_counter++;
-            if(!infected && !alive) dead_counter++; 
+            if(responseData[i].is_infected) infected_counter++;
+            if(!responseData[i].is_infected && !responseData[i].alive) dead_counter++; 
         }
-        count_dead.push(dead_counter);
-        count_healthy.push(alive_counter);
-        count_infected.push(infected_counter);
-        let interval=canvas.displayWidth/counter;
-        for(let i=0;i<counter; i++){
-            x_values.push(interval*i);
+        setCount_dead([...count_dead, dead_counter*pixels_per_unit]);
+        setCount_infected([...count_infected, (infected_counter+dead_counter)*pixels_per_unit]);
+        
+        let step=canvas.width/counter;
+        
+        for(let i=0;i<counter+1; i++){
+            x_values.push(step*i);
         }
-        //first make a shape  for dead
-        //make a shape for infected
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         //make a shape for alive
-        counter++;
+        ctx.beginPath();
+        ctx.fillStyle = '#3754e6';
+        ctx.fillRect(0,0,canvas.width, canvas.height)
+        ctx.fill();
+        ctx.closePath();
+
+
+        //make a shape for infected
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height); 
+        for(let i=0; i<x_values.length; i++){
+            ctx.lineTo(x_values[i], canvas.height-count_infected[i]);   
+        }
+        
+        ctx.lineTo(x_values[x_values.length-1], canvas.height);
+        ctx.lineTo(0, canvas.height);
+        ctx.fillStyle = '#e62727';
+        ctx.fill();
+        ctx.closePath();
+
+
+
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height);
+ 
+        for(let i=0; i<x_values.length; i++){
+            ctx.lineTo(x_values[i], canvas.height-count_dead[i]);   
+
+        }
+        ctx.lineTo(x_values[x_values.length-1], canvas.height);
+        ctx.lineTo(0, canvas.height);
+        ctx.fillStyle = '#6e6e6e';
+        ctx.fill();
+        ctx.closePath();
+
+        setCounter(counter+1)
     },[responseData]);
     
-    */
+    
     //////////
 
     function handlePresetsOnChange(e){
@@ -75,7 +128,7 @@ function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
     return(
         <div className={styles.wrapper}>
             <div className={styles.graph}>
-                <canvas className={styles.canvas} >
+                <canvas ref={canvasRef} className={styles.canvas} >
                 </canvas>
             </div>
             <div className={styles.settings}>
@@ -87,7 +140,7 @@ function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
                         <option value="EBOLA">EBOLA</option>
                         <option value="HIV">HIV</option>
                     </select>
-                    <button onClick={submitHandler}>Start</button>
+                    <button onClick={() => { submitHandler(); resetCanvas(); }}>Start</button>
                 </div>
                 <div className={styles.sliders}>
                     <Slider minmax={['1','10']} onChange={handleParam} sliderValue={sliderValue.movement_speed} name="movement_speed" prop_name={sliderNames[0]}/>

@@ -7,7 +7,6 @@ function Map({responseData}) {
     let scale=1;
     let displayWidth=500;
     useEffect(() => {
-        
         const canvas = canvasRef.current;
         canvas.width = displayWidth * scale;
         canvas.height = displayWidth * scale;

@@ -23,6 +23,7 @@ function Body(){
         ]);
     }, []);    */
     const submitHandler = async (e) => {
+        console.log(e);
         let requiredDataString = JSON.stringify(sliderValue);
         console.log(requiredDataString);
         if (websocket) {
@@ -32,7 +33,7 @@ function Body(){
     };
     const startWebSocket = (requiredDataString) => {
         
-        const webSocket = new WebSocket('ws://192.168.188.76:8080/'); // websocket endpoint on server
+        const webSocket = new WebSocket('ws://192.168.74.77:8080/'); // websocket endpoint on server
         webSocket.onopen = () => {
             console.log('Connected to server');
             webSocket.send(requiredDataString);
