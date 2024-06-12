@@ -146,7 +146,6 @@ function Parameters({responseData, sliderValue, setSlidervalue, submitHandler}){
                     <Slider minmax={['1','10']} onChange={handleParam} sliderValue={sliderValue.movement_speed} name="movement_speed" prop_name={sliderNames[0]}/>
                     <Slider minmax={['1','200']} onChange={handleParam} sliderValue={sliderValue.num_individuals} name="num_individuals" prop_name={sliderNames[1]}/>
                     <Slider minmax={['1','10000']} onChange={handleParam} sliderValue={sliderValue.num_iterations} name="num_iterations" prop_name={sliderNames[2]}/>
-                    <Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.infection_radius} name="infection_radius" prop_name={sliderNames[3]}/>
                     <Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.infection_probability} name="infection_probability" prop_name={sliderNames[4]}/>                
                     <Slider minmax={['1','100']} onChange={handleParam} sliderValue={sliderValue.probability_of_dying} name="probability_of_dying" prop_name={sliderNames[5]}/>  
                 </div>

@@ -2,13 +2,14 @@ import React, {useState} from 'react'
 import styles from "./Body.module.css"
 import Parameters from "./Parameters/Parameters";
 import Map from "./Map/map";
+import Final from "./Final/final";
 
 function Body(){
     const [sliderValue, setSlidervalue]=useState({
         movement_speed: '1',
         num_individuals:'100',
         infection_probability: '1',
-        infection_radius: '1',
+        infection_radius: '25',
         probability_of_dying: '1',
         num_iterations: '10000',
     });
@@ -33,7 +34,7 @@ function Body(){
     };
     const startWebSocket = (requiredDataString) => {
         
-        const webSocket = new WebSocket('ws://192.168.74.77:8080/'); // websocket endpoint on server
+        const webSocket = new WebSocket('ws://192.168.8.12:8080/'); // websocket endpoint on server
         webSocket.onopen = () => {
             console.log('Connected to server');
             webSocket.send(requiredDataString);
@@ -60,6 +61,7 @@ function Body(){
                 setSlidervalue={setSlidervalue}
                 submitHandler={submitHandler}/>
             <Map responseData={responseData}/>
+            <Final responseData={responseData}/>
         </div>
     )
 }

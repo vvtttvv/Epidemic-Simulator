@@ -42,6 +42,8 @@ function Map({responseData}) {
     const handlePausePlayClick = () => {
         setIsPaused(!isPaused);
     };
+    
+
 
     return (
         <div className={styles.wrapper}>
